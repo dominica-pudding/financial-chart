@@ -1,0 +1,81 @@
+<div class="stock-chart">
+  <dx-chart
+    id="chart"
+    title="Stock Price"
+    (onDrawn)="onDrawn($event)"
+    [dataSource]="stockPrices">
+    <dxi-series
+      name="AAPL"
+      openValueField="o"
+      highValueField="h"
+      lowValueField="l"
+      closeValueField="c">
+      <dxo-reduction color="red"></dxo-reduction>
+    </dxi-series>
+    <dxo-common-series-settings
+      argumentField="date"
+      type="candlestick">
+    </dxo-common-series-settings>
+    <dxo-legend itemTextPosition="left"></dxo-legend>
+    <dxi-value-axis [tickInterval]="1">
+      <dxo-title text="US dollars"></dxo-title>
+      <dxo-label>
+        <dxo-format
+          type="currency"
+          [precision]="0">
+        </dxo-format>
+      </dxo-label>
+    </dxi-value-axis>
+    <dxo-argument-axis [workdaysOnly]="true">
+      <dxo-label format="shortDate"></dxo-label>
+    </dxo-argument-axis>
+    <dxo-common-annotation-settings series="AAPL"
+                                    type="image"
+                                    [template]="'annotationTemplate'"
+                                    opacity="0"
+                                    [color]="'#ffffff'"
+                                    [tooltipEnabled]="false">
+      <dxo-font [size]="16" [weight]="600" [color]="'#000000'"></dxo-font>
+      <dxo-image [width]="50.5" [height]="105.75"></dxo-image>
+      <dxo-border [color]="'#ffffff'"></dxo-border>
+    </dxo-common-annotation-settings>
+    <ng-container *ngFor="let data of stockPriceAnnotations">
+      <dxi-annotation *ngFor="let annotation of data.annotations"
+                      [type]="'custom'"
+                      [data]="annotation"
+                      [argument]="data.date">
+      </dxi-annotation>
+    </ng-container>
+    <dxo-export [enabled]="true"></dxo-export>
+    <dxo-tooltip
+      [enabled]="true"
+      location="edge"
+      [customizeTooltip]="customizeTooltip">
+    </dxo-tooltip>
+
+    <svg #annoTemplate *dxTemplate="let annotation of 'annotationTemplate'" class="annotation">
+      <rect x="0" y="0" class="border"/>
+      <rect x="0" y="10" width="100" height="90" fill="#ffffff"/>
+      {{log(annotation)}}
+      <rect x="0" y="0" rx="10" ry="10" width="100" height="20" fill="green" *ngIf="annotation.data.ruleType == stockPriceType.Sell"/>
+      <rect x="0" y="0" rx="10" ry="10" width="100" height="20" fill="red" *ngIf="annotation.data.ruleType == stockPriceType.Buy"/>
+      <text x="20" y="15" fill="black">
+        <tspan class="caption">
+          {{ annotation.data.type == stockPriceType.Sell ? 'Sell Entry' : 'Buy Exit'}}</tspan>
+      </text>
+      <text x="20" y="20" fill="black">
+        <tspan dy="18" x="20" class="caption">{{annotation.data.dateTime | date: 'dd/MM/yyyy'}}</tspan>
+        <tspan dy="18" x="20" class="capital">{{annotation.data.dateTime | date: 'hh:mm:ss'}}</tspan>
+        <tspan dy="18" x="20" class="caption">{{annotation.data.profit | customCurrency:'USD':true:'1.0-0'}}</tspan>
+        <tspan dy="18" x="20" class="caption">{{annotation.data.positionSizing}}</tspan>
+      </text>
+      <g transform="translate(0,100)">
+        <path fill="green" *ngIf="annotation.data.ruleType == stockPriceType.Sell"
+              d="M 0 0 L 100 0 C 100 2 100 4 97 4 L 53 4 L 50 8 L 47 4 L 3 4 C 0 4 0 2 0 0"/>
+        <path fill="red" *ngIf="annotation.data.ruleType == stockPriceType.Buy"
+              d="M 0 0 L 100 0 C 100 2 100 4 97 4 L 53 4 L 50 8 L 47 4 L 3 4 C 0 4 0 2 0 0"/>
+      </g>
+    </svg>
+  </dx-chart>
+
+</div>

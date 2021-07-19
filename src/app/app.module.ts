@@ -8,10 +8,11 @@ import { AuthService, ScreenService, AppInfoService } from './shared/services';
 import { UnauthenticatedContentModule } from './unauthenticated-content';
 import { AppRoutingModule } from './app-routing.module';
 import {ChartsModule} from "./pages/charts/charts.module";
+import {SharedModule} from "./shared/shared.module";
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +26,8 @@ import {ChartsModule} from "./pages/charts/charts.module";
     LoginFormModule,
     UnauthenticatedContentModule,
     AppRoutingModule,
-    ChartsModule
+    ChartsModule,
+    SharedModule.forRoot()
   ],
   providers: [AuthService, ScreenService, AppInfoService],
   bootstrap: [AppComponent]

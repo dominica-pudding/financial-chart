@@ -1,0 +1,13 @@
+.stock-chart {
+  ::ng-deep .annotation {
+    font-size: 12px;
+
+    .border {
+      width: 100px;
+      height: 100px;
+      stroke: rgba(191, 191, 191, 0.25);
+      stroke-width: 1px;
+      fill: transparent;
+    }
+  }
+}
